@@ -4,3 +4,4 @@ installed-sims.json
 *.log
 umbrella.iml
 .idea/
+.tmp-umbrella-*

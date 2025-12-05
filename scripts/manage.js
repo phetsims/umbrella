@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 const fs = require( 'fs' );
-const os = require( 'os' );
 const path = require( 'path' );
 const { spawnSync } = require( 'child_process' );
 
@@ -189,7 +188,8 @@ function ensureZipRepo( repoName, owner = DEFAULT_OWNER, destName = repoName, br
     `https://api.github.com/repos/${owner}/${repoName}/zipball/${b}`
   ] );
 
-  const tmpRoot = fs.mkdtempSync( path.join( os.tmpdir(), 'umbrella-' ) );
+  // Use project-local temp dir to avoid EXDEV errors when /tmp is on a different filesystem (e.g., Codespaces)
+  const tmpRoot = fs.mkdtempSync( path.join( ROOT, '.tmp-umbrella-' ) );
   const zipPath = path.join( tmpRoot, `${repoName}.zip` );
   const extractDir = path.join( tmpRoot, 'extract' );
   fs.mkdirSync( extractDir, { recursive: true } );
