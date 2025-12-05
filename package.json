@@ -5,7 +5,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "postinstall": "node scripts/manage.js install-all",
+    "postinstall": "node scripts/manage.js install-all && node scripts/manage.js ensure-entr",
     "add-sim": "node scripts/manage.js add-sim",
     "remove-sim": "node scripts/manage.js remove-sim",
     "list-sims": "node scripts/manage.js list-sims",
@@ -14,7 +14,7 @@
     "push-all": "node scripts/manage.js push-all",
     "status-all": "node scripts/manage.js status-all",
     "clean-all": "node scripts/manage.js clean-all",
-    "start": "cd repos/chipper && npx grunt dev-server --port=8123"
+    "start": "cd repos/chipper && npm exec grunt dev-server -- --port=8123"
   },
   "keywords": [
     "phet",

@@ -18,7 +18,8 @@ const commands = {
   'pull-all': pullAll,
   'push-all': pushAll,
   'status-all': statusAll,
-  'clean-all': cleanAll
+  'clean-all': cleanAll,
+  'ensure-entr': ensureEntr
 };
 
 main();
@@ -38,7 +39,8 @@ function main() {
         '  npm run pull-all',
         '  npm run push-all',
         '  npm run status-all',
-        '  npm run clean-all'
+        '  npm run clean-all',
+        '  npm run ensure-entr'
       ].join( '\n' )
     );
     process.exit( 1 );
@@ -136,6 +138,33 @@ function cleanAll() {
     run( 'git', [ 'reset', '--hard' ], { cwd: repoPath }, `git reset failed in ${name}` );
     run( 'git', [ 'clean', '-fd' ], { cwd: repoPath }, `git clean failed in ${name}` );
   } );
+}
+
+function ensureEntr() {
+  const hasEntr = spawnSync( 'sh', [ '-c', 'command -v entr' ], { stdio: 'ignore' } ).status === 0;
+  if ( hasEntr ) {
+    log( 'entr already available.' );
+    return;
+  }
+
+  const hasApt = spawnSync( 'sh', [ '-c', 'command -v apt-get' ], { stdio: 'ignore' } ).status === 0;
+  if ( !hasApt ) {
+    log( 'entr not found and apt-get not available; please install entr manually.' );
+    return;
+  }
+
+  log( 'Installing entr via apt-get (requires sudo)...' );
+  const update = spawnSync( 'sudo', [ 'apt-get', 'update' ], { stdio: 'inherit' } );
+  if ( update.status !== 0 ) {
+    log( 'apt-get update failed; please install entr manually.' );
+    return;
+  }
+  const install = spawnSync( 'sudo', [ 'apt-get', 'install', '-y', 'entr' ], { stdio: 'inherit' } );
+  if ( install.status !== 0 ) {
+    log( 'apt-get install entr failed; please install manually.' );
+    return;
+  }
+  log( 'entr installed.' );
 }
 
 function ensureBaseRepos() {
