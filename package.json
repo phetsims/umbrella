@@ -14,7 +14,7 @@
     "push-all": "node scripts/manage.js push-all",
     "status-all": "node scripts/manage.js status-all",
     "clean-all": "node scripts/manage.js clean-all",
-    "start": "node scripts/manage.js start"
+    "start": "cd repos/chipper && npx grunt dev-server --port=8123"
   },
   "keywords": [
     "phet",
